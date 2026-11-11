@@ -11,5 +11,5 @@ class UcilnicaAdmin(admin.ModelAdmin):
 
 @admin.register(Rezervacija)
 class RezervacijaAdmin(admin.ModelAdmin):
-    list_display = ("ucilnica", "uporabnik", "datum", "ura_od", "ura_do")
-    list_filter = ("ucilnica", "datum")
+    list_display = ("ucilnica", "uporabnik", "datum", "solska_ura")
+    list_filter = ("ucilnica", "datum", "solska_ura")

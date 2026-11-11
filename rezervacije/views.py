@@ -6,14 +6,15 @@ from django.utils import timezone
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from .forms import RezervacijaForm
-from .models import Rezervacija, Ucilnica
+from .models import SOLSKE_URE, Rezervacija, Ucilnica
 
 
 def prihodnje(queryset):
     """Rezervacije, ki se še niso končale."""
     zdaj = timezone.localtime()
+    se_trajajo = [st for st, (_, konec) in SOLSKE_URE.items() if konec > zdaj.time()]
     return queryset.filter(
-        Q(datum__gt=zdaj.date()) | Q(datum=zdaj.date(), ura_do__gt=zdaj.time())
+        Q(datum__gt=zdaj.date()) | Q(datum=zdaj.date(), solska_ura__in=se_trajajo)
     )
 
 
