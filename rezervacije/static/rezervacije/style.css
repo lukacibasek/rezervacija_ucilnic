@@ -240,7 +240,7 @@ a:hover { color: var(--primary-dark); }
 }
 .hero h1 { font-size: 2.375rem; max-width: 16ch; margin-bottom: var(--s-3); }
 .hero p { font-size: 1.0625rem; max-width: 48ch; color: var(--text); }
-.hero__art { width: 160px; height: 160px; color: var(--primary); }
+.hero__art { width: 160px; height: 160px; color: var(--primary); stroke-width: 1.2; }
 .hero .btn-row { margin-top: var(--s-5); }
 
 /* ---------- Statistika ---------- */
@@ -431,12 +431,14 @@ a:hover { color: var(--primary-dark); }
 
 .detail {
   display: grid;
-  grid-template-columns: minmax(240px, 1fr) 2fr;
+  grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
   gap: var(--s-5);
   align-items: start;
 }
+.detail > * { min-width: 0; }
 .detail__info h1 { font-size: 2.5rem; margin-bottom: var(--s-2); }
 .detail__info p { color: var(--muted); }
+.detail__eyebrow { margin: 0; font-size: .8125rem; letter-spacing: .06em; text-transform: uppercase; }
 .detail__info .btn { width: 100%; margin-top: var(--s-5); }
 .detail__type {
   display: grid;
@@ -602,7 +604,7 @@ a:hover { color: var(--primary-dark); }
 /* ---------- Ozki zasloni ---------- */
 
 @media (max-width: 800px) {
-  .detail { grid-template-columns: 1fr; }
+  .detail { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 640px) {
@@ -620,8 +622,8 @@ a:hover { color: var(--primary-dark); }
   .hero__art { display: none; }
   .stats,
   .steps,
-  .grid,
-  .detail { grid-template-columns: 1fr; }
+  .grid { grid-template-columns: 1fr; }
+  .detail { grid-template-columns: minmax(0, 1fr); }
   .details { grid-template-columns: 1fr; gap: 0; }
   .details dd { margin-bottom: var(--s-2); }
   .card { padding: var(--s-4); }

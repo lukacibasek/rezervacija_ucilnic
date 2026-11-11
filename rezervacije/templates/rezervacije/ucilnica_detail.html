@@ -11,7 +11,7 @@
       <span class="detail__type">
         {% if "Računalnišk" in ucilnica.opis %}{% include "rezervacije/_ikona.html" with ime="racunalnik" %}{% elif "Fitnes" in ucilnica.opis %}{% include "rezervacije/_ikona.html" with ime="utez" %}{% else %}{% include "rezervacije/_ikona.html" with ime="knjiga" %}{% endif %}
       </span>
-      <p class="muted">Učilnica</p>
+      <p class="detail__eyebrow">Učilnica</p>
       <h1 id="ucilnica-naslov">{{ ucilnica.oznaka }}</h1>
       {% if ucilnica.opis %}<p>{{ ucilnica.opis|linebreaksbr }}</p>{% endif %}
       <span class="badge">{% include "rezervacije/_ikona.html" with ime="osebe" %} Kapaciteta: {{ ucilnica.kapaciteta }}</span>
