@@ -1,0 +1,11 @@
+<li data-tip="{{ tip }}">
+  <article class="room-card">
+    <div class="room-card__top">
+      <h3 class="room-card__code">{{ ucilnica.oznaka }}</h3>
+      <span class="room-card__type">{% include "rezervacije/_ikona.html" with ime=ikona %}</span>
+    </div>
+    <p class="room-card__desc">{{ ucilnica.opis|default:"Brez opisa"|truncatechars:90 }}</p>
+    <span class="badge">{% include "rezervacije/_ikona.html" with ime="osebe" %} Kapaciteta: {{ ucilnica.kapaciteta }}</span>
+    <a class="room-card__link" href="{{ ucilnica.get_absolute_url }}">Poglej termine<span class="visually-hidden"> učilnice {{ ucilnica.oznaka }}</span> &rarr;</a>
+  </article>
+</li>
