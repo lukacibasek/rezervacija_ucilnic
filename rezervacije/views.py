@@ -23,6 +23,13 @@ class UcilnicaListView(ListView):
     ordering = ["oznaka"]
     context_object_name = "ucilnice"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["st_ucilnic"] = Ucilnica.objects.count()
+        context["st_danes"] = Rezervacija.objects.filter(datum=timezone.localdate()).count()
+        context["st_prihodnjih"] = prihodnje(Rezervacija.objects.all()).count()
+        return context
+
 
 class UcilnicaDetailView(DetailView):
     model = Ucilnica
