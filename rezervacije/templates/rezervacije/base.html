@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Rezervacije učilnic{% endblock %}</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; background: #f5f6f8; color: #222; line-height: 1.5; }
+    header { background: #1f4e79; color: #fff; }
+    nav { max-width: 960px; margin: 0 auto; padding: .75rem 1rem; display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; }
+    nav a, nav button { color: #fff; text-decoration: none; background: none; border: 0; font: inherit; cursor: pointer; padding: 0; }
+    nav a:hover, nav button:hover { text-decoration: underline; }
+    nav .naslov { font-weight: bold; margin-right: auto; }
+    nav form { margin: 0; }
+    main { max-width: 960px; margin: 1.5rem auto; padding: 0 1rem; }
+    .kartica { background: #fff; border: 1px solid #dde1e6; border-radius: 6px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
+    .tabela { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background: #fff; }
+    th, td { text-align: left; padding: .5rem .75rem; border-bottom: 1px solid #dde1e6; }
+    th { background: #eef1f5; }
+    .gumb { display: inline-block; background: #1f4e79; color: #fff; border: 0; border-radius: 4px; padding: .45rem .9rem; font: inherit; text-decoration: none; cursor: pointer; }
+    .gumb:hover { background: #163a5a; }
+    .gumb.nevaren { background: #b42318; }
+    .gumb.nevaren:hover { background: #8f1c13; }
+    .gumb.sekundarni { background: #6b7280; }
+    .sporocila { list-style: none; padding: 0; }
+    .sporocila li { padding: .6rem 1rem; border-radius: 4px; margin-bottom: .5rem; background: #e7f0fa; border: 1px solid #b6d0ec; }
+    .sporocila li.success { background: #e8f6ec; border-color: #a9dbb6; }
+    .sporocila li.error { background: #fdecea; border-color: #f2b8b3; }
+    .napaka, .errorlist { color: #b42318; }
+    .errorlist { padding-left: 1.2rem; margin: .25rem 0; }
+    .polje { margin-bottom: .9rem; }
+    .polje label { display: block; font-weight: 600; margin-bottom: .2rem; }
+    .polje input, .polje select, .polje textarea { width: 100%; max-width: 420px; padding: .4rem; border: 1px solid #b8bfc8; border-radius: 4px; font: inherit; }
+    .prazno { color: #6b7280; font-style: italic; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a class="naslov" href="{% url 'rezervacije:ucilnica_list' %}">Rezervacije učilnic</a>
+      <a href="{% url 'rezervacije:ucilnica_list' %}">Učilnice</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'rezervacije:moje' %}">Moje rezervacije</a>
+        <a href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit">Odjava ({{ user.username }})</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}">Prijava</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% if messages %}
+      <ul class="sporocila">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

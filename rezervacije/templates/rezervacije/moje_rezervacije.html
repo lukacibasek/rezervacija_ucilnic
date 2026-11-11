@@ -1,0 +1,38 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Moje rezervacije | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <h1>Moje rezervacije</h1>
+  {% if rezervacije %}
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr><th>Učilnica</th><th>Datum</th><th>Od</th><th>Do</th><th>Namen</th><th>Dejanja</th></tr>
+        </thead>
+        <tbody>
+          {% for rezervacija in rezervacije %}
+            <tr>
+              <td><a href="{{ rezervacija.ucilnica.get_absolute_url }}">{{ rezervacija.ucilnica.oznaka }}</a></td>
+              <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
+              <td>{{ rezervacija.ura_od|time:"H:i" }}</td>
+              <td>{{ rezervacija.ura_do|time:"H:i" }}</td>
+              <td>{{ rezervacija.namen }}</td>
+              <td>
+                {% if rezervacija.datum >= danes %}
+                  <a href="{% url 'rezervacije:uredi' rezervacija.pk %}">Uredi</a> |
+                  <a href="{% url 'rezervacije:preklici' rezervacija.pk %}">Prekliči</a>
+                {% else %}
+                  <span class="prazno">pretekla</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="prazno">Nimate še nobene rezervacije.</p>
+  {% endif %}
+  <p><a class="gumb" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a></p>
+{% endblock %}

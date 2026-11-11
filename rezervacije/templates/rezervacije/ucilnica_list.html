@@ -1,0 +1,27 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Učilnice | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <h1>Učilnice</h1>
+  {% if ucilnice %}
+    <div class="tabela">
+      <table>
+        <thead>
+          <tr><th>Oznaka</th><th>Kapaciteta</th><th>Opis</th></tr>
+        </thead>
+        <tbody>
+          {% for ucilnica in ucilnice %}
+            <tr>
+              <td><a href="{{ ucilnica.get_absolute_url }}">{{ ucilnica.oznaka }}</a></td>
+              <td>{{ ucilnica.kapaciteta }}</td>
+              <td>{{ ucilnica.opis|truncatechars:80 }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="prazno">Trenutno ni na voljo nobene učilnice. Ko jih bo administrator dodal, se bodo prikazale tukaj.</p>
+  {% endif %}
+{% endblock %}

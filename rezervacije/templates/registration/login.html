@@ -1,0 +1,32 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Prijava | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <h1>Prijava</h1>
+  <div class="kartica">
+    {% if next and user.is_authenticated %}
+      <p class="napaka">Za ogled te strani nimate dovoljenja.</p>
+    {% elif next %}
+      <p>Za nadaljevanje se prijavite.</p>
+    {% endif %}
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {% if form.non_field_errors %}
+        <div class="napaka">{{ form.non_field_errors }}</div>
+      {% endif %}
+      <div class="polje">
+        <label for="{{ form.username.id_for_label }}">Uporabniško ime</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+      </div>
+      <div class="polje">
+        <label for="{{ form.password.id_for_label }}">Geslo</label>
+        {{ form.password }}
+        {{ form.password.errors }}
+      </div>
+      <input type="hidden" name="next" value="{{ next }}">
+      <button type="submit" class="gumb">Prijava</button>
+    </form>
+  </div>
+{% endblock %}

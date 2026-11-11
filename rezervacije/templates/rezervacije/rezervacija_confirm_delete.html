@@ -1,0 +1,21 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Preklic rezervacije | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <h1>Preklic rezervacije</h1>
+  <div class="kartica">
+    <p>Ali res želite preklicati to rezervacijo?</p>
+    <ul>
+      <li><strong>Učilnica:</strong> {{ object.ucilnica.oznaka }}</li>
+      <li><strong>Datum:</strong> {{ object.datum|date:"d. m. Y" }}</li>
+      <li><strong>Čas:</strong> {{ object.ura_od|time:"H:i" }}–{{ object.ura_do|time:"H:i" }}</li>
+      <li><strong>Namen:</strong> {{ object.namen }}</li>
+    </ul>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="gumb nevaren">Da, prekliči rezervacijo</button>
+      <a class="gumb sekundarni" href="{% url 'rezervacije:moje' %}">Ne, vrni se</a>
+    </form>
+  </div>
+{% endblock %}
