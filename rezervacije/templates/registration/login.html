@@ -3,30 +3,35 @@
 {% block title %}Prijava | Rezervacije učilnic{% endblock %}
 
 {% block content %}
-  <h1>Prijava</h1>
-  <div class="kartica">
+  <div class="card card--login card--centered">
+    <h1>Prijava</h1>
     {% if next and user.is_authenticated %}
-      <p class="napaka">Za ogled te strani nimate dovoljenja.</p>
+      <p class="muted">Za ogled te strani nimate dovoljenja.</p>
     {% elif next %}
-      <p>Za nadaljevanje se prijavite.</p>
+      <p class="muted">Za nadaljevanje se prijavite.</p>
+    {% else %}
+      <p class="muted">Prijavite se za rezervacijo učilnic.</p>
     {% endif %}
-    <form method="post" action="{% url 'login' %}">
+
+    <form method="post" action="{% url 'login' %}" novalidate>
       {% csrf_token %}
       {% if form.non_field_errors %}
-        <div class="napaka">{{ form.non_field_errors }}</div>
+        <div class="alert alert--error" role="alert">{{ form.non_field_errors }}</div>
       {% endif %}
-      <div class="polje">
+      <div class="field{% if form.username.errors %} field--error{% endif %}">
         <label for="{{ form.username.id_for_label }}">Uporabniško ime</label>
         {{ form.username }}
         {{ form.username.errors }}
       </div>
-      <div class="polje">
+      <div class="field{% if form.password.errors %} field--error{% endif %}">
         <label for="{{ form.password.id_for_label }}">Geslo</label>
         {{ form.password }}
         {{ form.password.errors }}
       </div>
       <input type="hidden" name="next" value="{{ next }}">
-      <button type="submit" class="gumb">Prijava</button>
+      <div class="btn-row">
+        <button type="submit" class="btn btn--primary btn--block">Prijava</button>
+      </div>
     </form>
   </div>
 {% endblock %}

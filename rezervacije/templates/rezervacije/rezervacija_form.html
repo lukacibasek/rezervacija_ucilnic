@@ -3,22 +3,42 @@
 {% block title %}{% if object %}Uredi rezervacijo{% else %}Nova rezervacija{% endif %} | Rezervacije učilnic{% endblock %}
 
 {% block content %}
-  <h1>{% if object %}Uredi rezervacijo{% else %}Nova rezervacija{% endif %}</h1>
-  <div class="kartica">
+  <div class="card card--narrow card--centered">
+    <h1>{% if object %}Uredi rezervacijo{% else %}Nova rezervacija{% endif %}</h1>
+    <p class="muted">Izberite učilnico, delovni dan in šolsko uro.</p>
+
     <form method="post" novalidate>
       {% csrf_token %}
+
       {% if form.non_field_errors %}
-        <div class="napaka">{{ form.non_field_errors }}</div>
+        <div class="alert alert--error" role="alert">
+          <strong>Rezervacije ni bilo mogoče shraniti.</strong>
+          {{ form.non_field_errors }}
+        </div>
       {% endif %}
+
       {% for field in form %}
-        <div class="polje">
-          {{ field.label_tag }}
-          {{ field }}
+        <div class="field{% if field.errors %} field--error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
+          {% if field.name == "ucilnica" and not object and not form.is_bound and request.GET.ucilnica %}
+            {# Predizbrana učilnica iz povezave na strani učilnice (?ucilnica=<id>). #}
+            <select name="{{ field.html_name }}" id="{{ field.auto_id }}" required>
+              {% for moznost in field %}
+                <option value="{{ moznost.data.value|stringformat:'s' }}"{% if moznost.data.value|stringformat:'s' == request.GET.ucilnica %} selected{% endif %}>{{ moznost.data.label }}</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            {{ field }}
+          {% endif %}
+          {% if field.help_text %}<div class="field__help">{{ field.help_text }}</div>{% endif %}
           {{ field.errors }}
         </div>
       {% endfor %}
-      <button type="submit" class="gumb">{% if object %}Shrani spremembe{% else %}Rezerviraj{% endif %}</button>
-      <a class="gumb sekundarni" href="{% url 'rezervacije:moje' %}">Prekliči</a>
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn--primary">{% if object %}Shrani spremembe{% else %}Rezerviraj{% endif %}</button>
+        <a class="btn btn--secondary" href="{% url 'rezervacije:moje' %}">Prekliči</a>
+      </div>
     </form>
   </div>
 {% endblock %}
