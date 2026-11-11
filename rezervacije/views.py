@@ -19,6 +19,7 @@ def prihodnje(queryset):
 
 class UcilnicaListView(ListView):
     model = Ucilnica
+    ordering = ["oznaka"]
     context_object_name = "ucilnice"
 
 

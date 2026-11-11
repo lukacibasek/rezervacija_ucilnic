@@ -29,15 +29,20 @@ pip install -r requirements.txt
 # 3. Pripravi podatkovno bazo
 python manage.py migrate
 
-# 4. Ustvari administratorja (za Django admin)
+# 4. Naloži začetne učilnice (SŠTS Šiška)
+python manage.py loaddata ucilnice
+
+# 5. Ustvari administratorja (za Django admin)
 python manage.py createsuperuser
 
-# 5. Zaženi razvojni strežnik
+# 6. Zaženi razvojni strežnik
 python manage.py runserver
 ```
 
 Aplikacija je nato dostopna na <http://127.0.0.1:8000/>, admin pa na
-<http://127.0.0.1:8000/admin/>. Učilnice in uporabniške račune dodaš v adminu.
+<http://127.0.0.1:8000/admin/>. Korak 4 naloži 14 učilnic Srednje šole tehniških
+strok Šiška; ukaz lahko varno ponoviš, saj učilnice prepozna po oznaki in jih ne
+podvoji. Dodatne učilnice in uporabniške račune dodaš v adminu.
 
 Testi se zaženejo z ukazom:
 
