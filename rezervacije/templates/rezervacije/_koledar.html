@@ -44,19 +44,19 @@ Tedenska mreža zasedenosti. Pričakuje "koledar" (iz rezervacije/koledar.py) in
               {% elif celica.stanje == "moja" %}
                 <a class="slot slot--moja" href="{{ celica.url }}">
                   <span class="slot__badge">Moja</span>
-                  <span class="slot__text">{{ celica.rezervacija.namen }}</span>
+                  <span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>
                   <span class="visually-hidden">– uredi rezervacijo</span>
                 </a>
               {% elif celica.stanje == "zasedeno" %}
                 <div class="slot slot--zasedeno">
                   <span class="slot__label">Zasedeno</span>
-                  <span class="slot__text">{{ celica.rezervacija.namen }}</span>
+                  <span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>
                   <span class="slot__who">{{ celica.rezervacija.uporabnik.get_full_name|default:celica.rezervacija.uporabnik.username }}</span>
                 </div>
               {% else %}
                 <div class="slot slot--preteklo">
                   <span class="slot__label">Preteklo</span>
-                  {% if celica.rezervacija %}<span class="slot__text">{{ celica.rezervacija.namen }}</span>{% endif %}
+                  {% if celica.rezervacija %}<span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>{% endif %}
                 </div>
               {% endif %}
             </td>
