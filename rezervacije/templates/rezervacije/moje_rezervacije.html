@@ -3,12 +3,28 @@
 {% block title %}Moje rezervacije | Rezervacije učilnic{% endblock %}
 
 {% block content %}
-  <h1>Moje rezervacije</h1>
+  <div class="page-header">
+    <div>
+      <h1>Moje rezervacije</h1>
+      <p class="muted">Pregled vaših rezervacij učilnic.</p>
+    </div>
+    {% if rezervacije %}
+      <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
+    {% endif %}
+  </div>
+
   {% if rezervacije %}
-    <div class="tabela">
-      <table>
+    <div class="table-wrap">
+      <table class="table">
         <thead>
-          <tr><th>Učilnica</th><th>Datum</th><th>Šolska ura</th><th>Čas</th><th>Namen</th><th>Dejanja</th></tr>
+          <tr>
+            <th scope="col">Učilnica</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Šolska ura</th>
+            <th scope="col">Čas</th>
+            <th scope="col">Namen</th>
+            <th scope="col"><span class="visually-hidden">Dejanja</span></th>
+          </tr>
         </thead>
         <tbody>
           {% for rezervacija in rezervacije %}
@@ -17,13 +33,15 @@
               <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
               <td>{{ rezervacija.naziv_ure }}</td>
               <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
-              <td>{{ rezervacija.namen }}</td>
+              <td class="wrap">{{ rezervacija.namen }}</td>
               <td>
                 {% if rezervacija.datum >= danes %}
-                  <a href="{% url 'rezervacije:uredi' rezervacija.pk %}">Uredi</a> |
-                  <a href="{% url 'rezervacije:preklici' rezervacija.pk %}">Prekliči</a>
+                  <div class="actions">
+                    <a class="btn btn--secondary btn--small" href="{% url 'rezervacije:uredi' rezervacija.pk %}">Uredi<span class="visually-hidden"> rezervacijo {{ rezervacija.ucilnica.oznaka }}, {{ rezervacija.datum|date:"d. m. Y" }}</span></a>
+                    <a class="btn btn--danger btn--small" href="{% url 'rezervacije:preklici' rezervacija.pk %}">Prekliči<span class="visually-hidden"> rezervacijo {{ rezervacija.ucilnica.oznaka }}, {{ rezervacija.datum|date:"d. m. Y" }}</span></a>
+                  </div>
                 {% else %}
-                  <span class="prazno">pretekla</span>
+                  <span class="muted">Pretekla</span>
                 {% endif %}
               </td>
             </tr>
@@ -32,7 +50,10 @@
       </table>
     </div>
   {% else %}
-    <p class="prazno">Nimate še nobene rezervacije.</p>
+    <div class="card empty">
+      <h2>Nimate še nobene rezervacije</h2>
+      <p>Ko boste rezervirali učilnico, se bo rezervacija prikazala tukaj.</p>
+      <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
+    </div>
   {% endif %}
-  <p><a class="gumb" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a></p>
 {% endblock %}
