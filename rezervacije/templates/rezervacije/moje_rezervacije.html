@@ -50,10 +50,7 @@
       </table>
     </div>
   {% else %}
-    <div class="card empty">
-      <h2>Nimate še nobene rezervacije</h2>
-      <p>Ko boste rezervirali učilnico, se bo rezervacija prikazala tukaj.</p>
-      <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
-    </div>
+    {% url 'rezervacije:nova' as nova_url %}
+    {% include "rezervacije/_prazno.html" with naslov="Nimate še nobene rezervacije" besedilo="Vaša skodelica je še prazna. Ko boste rezervirali učilnico, se bo rezervacija prikazala tukaj." povezava=nova_url gumb="Nova rezervacija" %}
   {% endif %}
 {% endblock %}
