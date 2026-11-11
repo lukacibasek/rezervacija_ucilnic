@@ -3,41 +3,46 @@
 {% block title %}Učilnica {{ ucilnica.oznaka }} | Rezervacije učilnic{% endblock %}
 
 {% block content %}
-  <p><a href="{% url 'rezervacije:ucilnica_list' %}">&larr; Vse učilnice</a></p>
+  <a class="back-link" href="{% url 'rezervacije:ucilnica_list' %}">&larr; Vse učilnice</a>
 
-  <div class="card room-header">
-    <div>
-      <h1>Učilnica {{ ucilnica.oznaka }}</h1>
+  {% url 'rezervacije:nova' as nova_url %}
+  <div class="detail">
+    <aside class="card detail__info" aria-labelledby="ucilnica-naslov">
+      <span class="detail__type">
+        {% if "Računalnišk" in ucilnica.opis %}{% include "rezervacije/_ikona.html" with ime="racunalnik" %}{% elif "Fitnes" in ucilnica.opis %}{% include "rezervacije/_ikona.html" with ime="utez" %}{% else %}{% include "rezervacije/_ikona.html" with ime="knjiga" %}{% endif %}
+      </span>
+      <p class="muted">Učilnica</p>
+      <h1 id="ucilnica-naslov">{{ ucilnica.oznaka }}</h1>
       {% if ucilnica.opis %}<p>{{ ucilnica.opis|linebreaksbr }}</p>{% endif %}
-      <span class="badge">Kapaciteta: {{ ucilnica.kapaciteta }}</span>
-    </div>
-    <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}?ucilnica={{ ucilnica.pk }}">Rezerviraj to učilnico</a>
-  </div>
+      <span class="badge">{% include "rezervacije/_ikona.html" with ime="osebe" %} Kapaciteta: {{ ucilnica.kapaciteta }}</span>
+      <a class="btn btn--primary" href="{{ nova_url }}?ucilnica={{ ucilnica.pk }}">Rezerviraj to učilnico</a>
+    </aside>
 
-  <section class="section" aria-labelledby="termini">
-    <h2 id="termini">Prihajajoče rezervacije</h2>
-    {% if rezervacije %}
-      <div class="table-wrap">
-        <table class="table">
-          <thead>
-            <tr><th scope="col">Datum</th><th scope="col">Šolska ura</th><th scope="col">Čas</th><th scope="col">Namen</th></tr>
-          </thead>
-          <tbody>
-            {% for rezervacija in rezervacije %}
-              <tr>
-                <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
-                <td>{{ rezervacija.naziv_ure }}</td>
-                <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
-                <td class="wrap">{{ rezervacija.namen }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-    {% else %}
-      <div class="card empty">
-        <p>Za to učilnico ni prihajajočih rezervacij. Vsi termini so prosti.</p>
-      </div>
-    {% endif %}
-  </section>
+    <section class="detail__main" aria-labelledby="termini">
+      <h2 id="termini">Prihajajoče rezervacije</h2>
+      {% if rezervacije %}
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th scope="col">Datum</th><th scope="col">Šolska ura</th><th scope="col">Čas</th><th scope="col">Namen</th></tr>
+            </thead>
+            <tbody>
+              {% for rezervacija in rezervacije %}
+                <tr>
+                  <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
+                  <td>{{ rezervacija.naziv_ure }}</td>
+                  <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
+                  <td class="wrap">{{ rezervacija.namen }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        {% with pk_niz=ucilnica.pk|stringformat:"s" %}{% with povezava=nova_url|add:"?ucilnica="|add:pk_niz %}
+          {% include "rezervacije/_prazno.html" with naslov="Vsi termini so prosti" besedilo="Za to učilnico še ni prihajajočih rezervacij. Bodite prvi!" povezava=povezava gumb="Rezerviraj to učilnico" %}
+        {% endwith %}{% endwith %}
+      {% endif %}
+    </section>
+  </div>
 {% endblock %}
