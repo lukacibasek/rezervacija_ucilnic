@@ -5,9 +5,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
 from .forms import RezervacijaForm
+from .koledar import tedenski_koledar
 from .models import SOLSKE_URE, Rezervacija, Ucilnica
 
 
@@ -33,15 +41,40 @@ class UcilnicaListView(ListView):
         return context
 
 
-class UcilnicaDetailView(DetailView):
+class KoledarMixin:
+    """Doda tedenski koledar zasedenosti izbrane učilnice v kontekst."""
+
+    def koledar(self, ucilnica, dodatni_parametri=None):
+        return tedenski_koledar(
+            ucilnica, self.request.GET.get("teden"), self.request.user, dodatni_parametri
+        )
+
+
+class UcilnicaDetailView(KoledarMixin, DetailView):
     model = Ucilnica
     context_object_name = "ucilnica"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["rezervacije"] = prihodnje(
-            self.object.rezervacije.select_related("uporabnik")
-        )
+        context["koledar"] = self.koledar(self.object)
+        return context
+
+
+class KoledarView(KoledarMixin, TemplateView):
+    template_name = "rezervacije/koledar.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ucilnice = Ucilnica.objects.order_by("oznaka")
+        izbrana = None
+        try:
+            izbrana = ucilnice.get(pk=int(self.request.GET["ucilnica"]))
+        except (KeyError, ValueError, Ucilnica.DoesNotExist):
+            izbrana = ucilnice.first()
+        context["ucilnice"] = ucilnice
+        context["ucilnica"] = izbrana
+        if izbrana:
+            context["koledar"] = self.koledar(izbrana, {"ucilnica": izbrana.pk})
         return context
 
 
