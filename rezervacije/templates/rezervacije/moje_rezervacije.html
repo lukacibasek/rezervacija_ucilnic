@@ -8,15 +8,15 @@
     <div class="tabela">
       <table>
         <thead>
-          <tr><th>Učilnica</th><th>Datum</th><th>Od</th><th>Do</th><th>Namen</th><th>Dejanja</th></tr>
+          <tr><th>Učilnica</th><th>Datum</th><th>Šolska ura</th><th>Čas</th><th>Namen</th><th>Dejanja</th></tr>
         </thead>
         <tbody>
           {% for rezervacija in rezervacije %}
             <tr>
               <td><a href="{{ rezervacija.ucilnica.get_absolute_url }}">{{ rezervacija.ucilnica.oznaka }}</a></td>
               <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
-              <td>{{ rezervacija.ura_od|time:"H:i" }}</td>
-              <td>{{ rezervacija.ura_do|time:"H:i" }}</td>
+              <td>{{ rezervacija.naziv_ure }}</td>
+              <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
               <td>{{ rezervacija.namen }}</td>
               <td>
                 {% if rezervacija.datum >= danes %}

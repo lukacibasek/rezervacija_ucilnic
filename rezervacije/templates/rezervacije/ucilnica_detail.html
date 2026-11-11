@@ -14,14 +14,14 @@
     <div class="tabela">
       <table>
         <thead>
-          <tr><th>Datum</th><th>Od</th><th>Do</th><th>Namen</th></tr>
+          <tr><th>Datum</th><th>Šolska ura</th><th>Čas</th><th>Namen</th></tr>
         </thead>
         <tbody>
           {% for rezervacija in rezervacije %}
             <tr>
               <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
-              <td>{{ rezervacija.ura_od|time:"H:i" }}</td>
-              <td>{{ rezervacija.ura_do|time:"H:i" }}</td>
+              <td>{{ rezervacija.naziv_ure }}</td>
+              <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
               <td>{{ rezervacija.namen }}</td>
             </tr>
           {% endfor %}

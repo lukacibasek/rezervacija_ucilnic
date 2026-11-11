@@ -9,7 +9,7 @@
     <ul>
       <li><strong>Učilnica:</strong> {{ object.ucilnica.oznaka }}</li>
       <li><strong>Datum:</strong> {{ object.datum|date:"d. m. Y" }}</li>
-      <li><strong>Čas:</strong> {{ object.ura_od|time:"H:i" }}–{{ object.ura_do|time:"H:i" }}</li>
+      <li><strong>Šolska ura:</strong> {{ object.get_solska_ura_display }}</li>
       <li><strong>Namen:</strong> {{ object.namen }}</li>
     </ul>
     <form method="post">
