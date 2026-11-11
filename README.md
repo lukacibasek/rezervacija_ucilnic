@@ -55,10 +55,13 @@ python manage.py test
 - Javni seznam učilnic (oznaka, kapaciteta, opis) s prijaznim sporočilom, če učilnic še ni.
 - Javna stran posamezne učilnice s prihajajočimi rezervacijami.
 - Prijava in odjava uporabnikov.
-- Ustvarjanje nove rezervacije (učilnica, datum, ura od–do, namen).
+- Začetni seznam 14 učilnic SŠTS Šiška (`python manage.py loaddata ucilnice`), urejen po oznaki.
+- Ustvarjanje nove rezervacije za šolsko uro (učilnica, datum, šolska ura 0–10, namen).
+  Čas posamezne ure (npr. 1. ura 8.00–8.45) je določen v programu in se izpiše samodejno.
 - Pregled lastnih rezervacij ter njihovo urejanje in preklic (s potrditveno stranjo).
-- Preverjanje pravilnosti: ura začetka mora biti pred uro konca, datum ne sme biti
-  v preteklosti, rezervacija se ne sme prekrivati z drugo rezervacijo iste učilnice.
+- Preverjanje pravilnosti: datum ne sme biti v preteklosti ne na soboto ali nedeljo,
+  učilnica je lahko v isti šolski uri istega dne rezervirana le enkrat
+  (zagotovljeno tudi z omejitvijo v podatkovni bazi).
 - Uporabnik lahko ureja in prekliče samo svoje rezervacije (do tujih dobi napako 404).
 - Upravljanje učilnic in rezervacij v Django adminu (iskanje, filtri).
 
@@ -66,9 +69,12 @@ python manage.py test
 
 - Registracije novih uporabnikov ni; račune ustvari administrator v adminu.
 - Ni ponavljajočih se rezervacij (npr. vsak teden ob isti uri).
-- Ni preverjanja delovnega časa šole ali kapacitete glede na število udeležencev.
-- Preverjanje prekrivanja poteka na ravni aplikacije, zato bi lahko dve hkratni
-  zahtevi v redkih primerih ustvarili prekrivajoči se rezervaciji.
+- Rezervira se lahko samo ena šolska ura naenkrat; za blok ur je treba narediti
+  več rezervacij.
+- Praznikov in počitnic aplikacija ne pozna (zavrne samo sobote in nedelje).
+- Ni preverjanja kapacitete glede na število udeležencev.
+- Časi šolskih ur so zapisani v kodi (`SOLSKE_URE` v `rezervacije/models.py`),
+  ne v adminu.
 - Pretekle rezervacije ni mogoče urejati (datum ne sme biti v preteklosti).
 - Nastavitve (`SECRET_KEY`, `DEBUG = True`) so namenjene samo razvoju, ne produkciji.
 
@@ -82,14 +88,19 @@ commiti, pull requesti, pregledi kode.)_
 
 Preverjeno 11. 11. 2026 z Djangom 6.1.2 in Pythonom 3.14:
 
-- `python manage.py makemigrations` – brez novih sprememb (migracija `0001_initial` je v repozitoriju).
+- `python manage.py makemigrations` – brez novih sprememb (migraciji `0001_initial`
+  in `0002_solska_ura` sta v repozitoriju; `0002` obstoječe rezervacije pretvori
+  v šolsko uro glede na uro začetka).
 - `python manage.py migrate` – uspešno.
+- `python manage.py loaddata ucilnice` – „Installed 14 object(s) from 1 fixture(s)“;
+  ponovni zagon učilnic ne podvoji.
 - `python manage.py check` – „System check identified no issues (0 silenced).“
-- `python manage.py test` – 6 testov, vsi uspešni (OK):
-  - prekrivajoča rezervacija iste učilnice je zavrnjena (model in obrazec),
-  - zaporedna rezervacija (konec ene = začetek druge) je dovoljena,
+- `python manage.py test` – 12 testov, vsi uspešni (OK):
+  - rezervacija iste učilnice v isti šolski uri je zavrnjena (model in obrazec),
+  - druga šolska ura iste učilnice je dovoljena, urejanje lastne rezervacije ni konflikt,
+  - sobota in pretekli datum sta zavrnjena,
+  - časi ur (`ura_od`, `ura_do`) in oznake izhajajo iz konstante,
+  - stran učilnice prikaže datum, šolsko uro, čas in namen,
   - anonimni uporabnik je pri `/rezervacije/nova/` preusmerjen na prijavo,
   - uporabnik ne more preklicati tuje rezervacije (404),
-  - prazen seznam učilnic prikaže sporočilo.
-- Ročni pregled vseh strani s testnim odjemalcem (seznam, podrobnosti, prijava,
-  nova rezervacija, moje rezervacije, urejanje, preklic, odjava) – vse delujejo.
+  - prazen seznam učilnic prikaže sporočilo, fixture naloži 14 učilnic po oznaki.
