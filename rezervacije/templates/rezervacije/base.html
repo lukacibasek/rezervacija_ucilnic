@@ -10,13 +10,19 @@
   {% with ime=request.resolver_match.url_name %}
   <header class="site-header">
     <div class="site-header__inner">
-      <a class="brand" href="{% url 'rezervacije:ucilnica_list' %}">Rezervacije učilnic</a>
+      <a class="brand" href="{% url 'rezervacije:ucilnica_list' %}">
+        {% include "rezervacije/_ikona.html" with ime="skodelica" %}
+        Rezervacije učilnic
+      </a>
       <nav class="nav" aria-label="Glavna navigacija">
         <a class="nav__link" href="{% url 'rezervacije:ucilnica_list' %}"{% if ime == 'ucilnica_list' or ime == 'ucilnica_detail' %} aria-current="page"{% endif %}>Učilnice</a>
         {% if user.is_authenticated %}
           <a class="nav__link" href="{% url 'rezervacije:moje' %}"{% if ime == 'moje' or ime == 'uredi' or ime == 'preklici' %} aria-current="page"{% endif %}>Moje rezervacije</a>
           <a class="nav__link" href="{% url 'rezervacije:nova' %}"{% if ime == 'nova' %} aria-current="page"{% endif %}>Nova rezervacija</a>
-          <span class="nav__user">Prijavljeni: <strong>{{ user.username }}</strong></span>
+          <span class="nav__user">
+            {% include "rezervacije/_ikona.html" with ime="oseba" %}
+            <span class="visually-hidden">Prijavljeni ste kot</span> {{ user.username }}
+          </span>
           <form method="post" action="{% url 'logout' %}">
             {% csrf_token %}
             <button type="submit" class="nav__link">Odjava</button>
@@ -42,9 +48,14 @@
 
   <footer class="site-footer">
     <div class="site-footer__inner">
-      <span>Srednja šola tehniških strok Šiška</span>
-      <span>Šolski projekt RPS</span>
+      <div>
+        <p><strong>Srednja šola tehniških strok Šiška</strong></p>
+        <p>Šolski projekt RPS</p>
+      </div>
+      <p class="authors">Avtorji: Valentin Križaj, Žiga Mav, Luka Čibašek</p>
     </div>
   </footer>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,15 @@
+{% comment %}
+Prazno stanje s prazno skodelico.
+Parametri: naslov, besedilo, povezava (neobvezno), gumb (neobvezno).
+{% endcomment %}
+<div class="card empty">
+  <svg class="empty__art" viewBox="0 0 96 96" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+    <path d="M18 38h48v16a22 22 0 0 1-22 22h-4a22 22 0 0 1-22-22V38Z"/>
+    <path d="M66 42h5a9 9 0 0 1 0 18h-6"/>
+    <path d="M12 84h66"/>
+    <path d="M34 16c-3 4-3 8 0 12M46 12c-3 4-3 8 0 12" opacity=".55"/>
+  </svg>
+  <h2>{{ naslov }}</h2>
+  <p>{{ besedilo }}</p>
+  {% if povezava %}<a class="btn btn--primary" href="{{ povezava }}">{{ gumb }}</a>{% endif %}
+</div>
