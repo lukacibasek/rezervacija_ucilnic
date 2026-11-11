@@ -1,0 +1,29 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Preklic rezervacije | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <div class="card card--narrow card--centered">
+    <h1>Preklic rezervacije</h1>
+    <p>Ali res želite preklicati to rezervacijo? Tega dejanja ni mogoče razveljaviti.</p>
+
+    <dl class="details">
+      <dt>Učilnica</dt>
+      <dd>{{ object.ucilnica.oznaka }}</dd>
+      <dt>Datum</dt>
+      <dd>{{ object.datum|date:"d. m. Y" }}</dd>
+      <dt>Šolska ura</dt>
+      <dd>{{ object.naziv_ure }} ({{ object.ura_od|time:"G.i" }}–{{ object.ura_do|time:"G.i" }})</dd>
+      <dt>Namen</dt>
+      <dd>{{ object.namen }}</dd>
+    </dl>
+
+    <form method="post">
+      {% csrf_token %}
+      <div class="btn-row">
+        <button type="submit" class="btn btn--danger">Prekliči rezervacijo</button>
+        <a class="btn btn--secondary" href="{% url 'rezervacije:moje' %}">Nazaj</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

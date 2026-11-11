@@ -1,0 +1,56 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Moje rezervacije | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Moje rezervacije</h1>
+      <p class="muted">Pregled vaših rezervacij učilnic.</p>
+    </div>
+    {% if rezervacije %}
+      <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
+    {% endif %}
+  </div>
+
+  {% if rezervacije %}
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Učilnica</th>
+            <th scope="col">Datum</th>
+            <th scope="col">Šolska ura</th>
+            <th scope="col">Čas</th>
+            <th scope="col">Namen</th>
+            <th scope="col"><span class="visually-hidden">Dejanja</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for rezervacija in rezervacije %}
+            <tr>
+              <td><a href="{{ rezervacija.ucilnica.get_absolute_url }}">{{ rezervacija.ucilnica.oznaka }}</a></td>
+              <td>{{ rezervacija.datum|date:"d. m. Y" }}</td>
+              <td>{{ rezervacija.naziv_ure }}</td>
+              <td>{{ rezervacija.ura_od|time:"G.i" }}–{{ rezervacija.ura_do|time:"G.i" }}</td>
+              <td class="wrap">{{ rezervacija.namen }}</td>
+              <td>
+                {% if rezervacija.datum >= danes %}
+                  <div class="actions">
+                    <a class="btn btn--secondary btn--small" href="{% url 'rezervacije:uredi' rezervacija.pk %}">Uredi<span class="visually-hidden"> rezervacijo {{ rezervacija.ucilnica.oznaka }}, {{ rezervacija.datum|date:"d. m. Y" }}</span></a>
+                    <a class="btn btn--danger btn--small" href="{% url 'rezervacije:preklici' rezervacija.pk %}">Prekliči<span class="visually-hidden"> rezervacijo {{ rezervacija.ucilnica.oznaka }}, {{ rezervacija.datum|date:"d. m. Y" }}</span></a>
+                  </div>
+                {% else %}
+                  <span class="muted">Pretekla</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    {% url 'rezervacije:nova' as nova_url %}
+    {% include "rezervacije/_prazno.html" with naslov="Nimate še nobene rezervacije" besedilo="Vaša skodelica je še prazna. Ko boste rezervirali učilnico, se bo rezervacija prikazala tukaj." povezava=nova_url gumb="Nova rezervacija" %}
+  {% endif %}
+{% endblock %}

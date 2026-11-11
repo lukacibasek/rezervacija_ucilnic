@@ -1,0 +1,35 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}{% if object %}Uredi rezervacijo{% else %}Nova rezervacija{% endif %} | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <div class="card card--narrow card--centered">
+    <h1>{% if object %}Uredi rezervacijo{% else %}Nova rezervacija{% endif %}</h1>
+    <p class="muted">Izberite učilnico, delovni dan in šolsko uro.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      {% if form.non_field_errors %}
+        <div class="alert alert--error" role="alert">
+          <strong>Rezervacije ni bilo mogoče shraniti.</strong>
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      {% for field in form %}
+        <div class="field{% if field.errors %} field--error{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
+          {{ field }}
+          {% if field.help_text %}<div class="field__help">{{ field.help_text }}</div>{% endif %}
+          {{ field.errors }}
+        </div>
+      {% endfor %}
+
+      <div class="btn-row">
+        <button type="submit" class="btn btn--primary">{% if object %}Shrani spremembe{% else %}Rezerviraj{% endif %}</button>
+        <a class="btn btn--secondary" href="{% url 'rezervacije:moje' %}">Prekliči</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

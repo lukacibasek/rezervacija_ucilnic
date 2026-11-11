@@ -1,0 +1,75 @@
+{% comment %}
+Tedenska mreža zasedenosti. Pričakuje "koledar" (iz rezervacije/koledar.py) in "ucilnica".
+{% endcomment %}
+<div class="week-nav">
+  {% if koledar.prejsnji %}
+    <a class="btn btn--secondary btn--small" href="{{ koledar.prejsnji }}">&larr; Prejšnji teden</a>
+  {% else %}
+    <span class="btn btn--secondary btn--small is-disabled" aria-disabled="true">&larr; Prejšnji teden</span>
+  {% endif %}
+  <div class="week-nav__range">
+    <strong>{{ koledar.od|date:"j. n." }} – {{ koledar.do|date:"j. n. Y" }}</strong>
+    {% if not koledar.je_ta_teden %}<a href="{{ koledar.ta }}">Ta teden</a>{% else %}<span class="muted">Ta teden</span>{% endif %}
+  </div>
+  <a class="btn btn--secondary btn--small" href="{{ koledar.naslednji }}">Naslednji teden &rarr;</a>
+</div>
+
+<div class="cal-wrap" tabindex="0" role="region" aria-label="Tedenski koledar učilnice {{ ucilnica.oznaka }}">
+  <table class="cal">
+    <caption class="visually-hidden">Zasedenost učilnice {{ ucilnica.oznaka }} od {{ koledar.od|date:"j. n." }} do {{ koledar.do|date:"j. n. Y" }}</caption>
+    <thead>
+      <tr>
+        <th scope="col" class="cal__corner">Ura</th>
+        {% for dan in koledar.dnevi %}
+          <th scope="col" class="cal__day{% if dan.danes %} cal__day--today{% endif %}">
+            {{ dan.oznaka }}{% if dan.danes %}<span class="cal__today-label">danes</span>{% endif %}
+          </th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for vrstica in koledar.vrstice %}
+        <tr>
+          <th scope="row" class="cal__period">
+            <span class="cal__period-name">{{ vrstica.naziv }}</span>
+            <span class="cal__period-time">{{ vrstica.od|time:"G.i" }}–{{ vrstica.do|time:"G.i" }}</span>
+          </th>
+          {% for celica in vrstica.celice %}
+            <td class="cal__cell cal__cell--{{ celica.stanje }}{% if celica.datum == koledar.danes %} cal__cell--today{% endif %}">
+              {% if celica.stanje == "prosto" %}
+                <a class="slot slot--prosto" href="{{ celica.url }}">
+                  <span class="slot__label">Prosto</span>
+                  <span class="visually-hidden">– rezerviraj {{ celica.datum|date:"j. n." }}, {{ vrstica.naziv }}</span>
+                </a>
+              {% elif celica.stanje == "moja" %}
+                <a class="slot slot--moja" href="{{ celica.url }}">
+                  <span class="slot__badge">Moja</span>
+                  <span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>
+                  <span class="visually-hidden">– uredi rezervacijo</span>
+                </a>
+              {% elif celica.stanje == "zasedeno" %}
+                <div class="slot slot--zasedeno">
+                  <span class="slot__label">Zasedeno</span>
+                  <span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>
+                  <span class="slot__who">{{ celica.rezervacija.uporabnik.get_full_name|default:celica.rezervacija.uporabnik.username }}</span>
+                </div>
+              {% else %}
+                <div class="slot slot--preteklo">
+                  <span class="slot__label">Preteklo</span>
+                  {% if celica.rezervacija %}<span class="slot__text" title="{{ celica.rezervacija.namen }}">{{ celica.rezervacija.namen }}</span>{% endif %}
+                </div>
+              {% endif %}
+            </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<ul class="legend" aria-label="Legenda">
+  <li><span class="legend__swatch legend__swatch--prosto" aria-hidden="true"></span> Prosto</li>
+  <li><span class="legend__swatch legend__swatch--zasedeno" aria-hidden="true"></span> Zasedeno</li>
+  <li><span class="legend__swatch legend__swatch--moja" aria-hidden="true"></span> Moja rezervacija</li>
+  <li><span class="legend__swatch legend__swatch--preteklo" aria-hidden="true"></span> Preteklo</li>
+</ul>

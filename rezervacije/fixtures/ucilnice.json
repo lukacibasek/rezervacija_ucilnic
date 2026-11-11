@@ -1,0 +1,114 @@
+[
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "0240",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "0300",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "1100",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "1230",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "1250",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "1270",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "1300",
+      "kapaciteta": 16,
+      "opis": "Računalniška učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "2050",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "2100",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "2110",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "2130",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "3020",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "3040",
+      "kapaciteta": 30,
+      "opis": "Splošna učilnica"
+    }
+  },
+  {
+    "model": "rezervacije.ucilnica",
+    "fields": {
+      "oznaka": "T1070",
+      "kapaciteta": 20,
+      "opis": "Fitnes"
+    }
+  }
+]

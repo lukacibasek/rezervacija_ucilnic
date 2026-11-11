@@ -1,0 +1,30 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Koledar{% if ucilnica %} – {{ ucilnica.oznaka }}{% endif %} | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <div class="page-header">
+    <div>
+      <h1>Koledar zasedenosti</h1>
+      <p class="muted">Na prvi pogled preverite, kdaj je učilnica prosta.</p>
+    </div>
+    {% if ucilnica %}
+      <form class="room-picker" method="get" action="{% url 'rezervacije:koledar' %}">
+        <label for="izbira-ucilnice">Učilnica</label>
+        <select id="izbira-ucilnice" name="ucilnica" onchange="this.form.submit()">
+          {% for u in ucilnice %}
+            <option value="{{ u.pk }}"{% if u.pk == ucilnica.pk %} selected{% endif %}>{{ u.oznaka }}{% if u.opis %} – {{ u.opis }}{% endif %}</option>
+          {% endfor %}
+        </select>
+        {% if request.GET.teden %}<input type="hidden" name="teden" value="{{ koledar.od|date:'Y-m-d' }}">{% endif %}
+        <button type="submit" class="btn btn--secondary btn--small">Prikaži</button>
+      </form>
+    {% endif %}
+  </div>
+
+  {% if ucilnica %}
+    {% include "rezervacije/_koledar.html" %}
+  {% else %}
+    {% include "rezervacije/_prazno.html" with naslov="Ni učilnic" besedilo="Trenutno ni na voljo nobene učilnice, zato koledarja ni mogoče prikazati." %}
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% load static %}<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Rezervacije učilnic{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'rezervacije/style.css' %}">
+</head>
+<body>
+  {% with ime=request.resolver_match.url_name %}
+  <header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="{% url 'rezervacije:ucilnica_list' %}">
+        {% include "rezervacije/_ikona.html" with ime="skodelica" %}
+        Rezervacije učilnic
+      </a>
+      <nav class="nav" aria-label="Glavna navigacija">
+        <a class="nav__link" href="{% url 'rezervacije:ucilnica_list' %}"{% if ime == 'ucilnica_list' or ime == 'ucilnica_detail' %} aria-current="page"{% endif %}>Učilnice</a>
+        <a class="nav__link" href="{% url 'rezervacije:koledar' %}"{% if ime == 'koledar' %} aria-current="page"{% endif %}>Koledar</a>
+        {% if user.is_authenticated %}
+          <a class="nav__link" href="{% url 'rezervacije:moje' %}"{% if ime == 'moje' or ime == 'uredi' or ime == 'preklici' %} aria-current="page"{% endif %}>Moje rezervacije</a>
+          <a class="nav__link" href="{% url 'rezervacije:nova' %}"{% if ime == 'nova' %} aria-current="page"{% endif %}>Nova rezervacija</a>
+          <span class="nav__user">
+            {% include "rezervacije/_ikona.html" with ime="oseba" %}
+            <span class="visually-hidden">Prijavljeni ste kot</span> {{ user.username }}
+          </span>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav__link">Odjava</button>
+          </form>
+        {% else %}
+          <a class="nav__link" href="{% url 'login' %}"{% if ime == 'login' %} aria-current="page"{% endif %}>Prijava</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+  {% endwith %}
+
+  <main class="content">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="alert alert--{{ message.level_tag|default:'info' }}" role="{% if message.level_tag == 'error' %}alert{% else %}status{% endif %}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer__inner">
+      <div>
+        <p><strong>Srednja šola tehniških strok Šiška</strong></p>
+        <p>Šolski projekt RPS</p>
+      </div>
+      <p class="authors">Avtorji: Valentin Križaj, Žiga Mav, Luka Čibašek</p>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

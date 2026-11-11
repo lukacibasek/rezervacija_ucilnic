@@ -1,0 +1,109 @@
+{% extends "rezervacije/base.html" %}
+
+{% block title %}Učilnice | Rezervacije učilnic{% endblock %}
+
+{% block content %}
+  <section class="hero" aria-labelledby="hero-naslov">
+    <div>
+      <h1 id="hero-naslov">Rezerviraj učilnico v nekaj klikih</h1>
+      <p>Preveri proste termine, izberi šolsko uro in učilnico rezerviraj za pouk, vaje ali sestanek – brez papirjev in dopisovanja.</p>
+      <div class="btn-row">
+        <a class="btn btn--primary" href="{% url 'rezervacije:nova' %}">Nova rezervacija</a>
+        <a class="btn btn--secondary" href="{% url 'rezervacije:moje' %}">Moje rezervacije</a>
+      </div>
+    </div>
+    {% include "rezervacije/_ikona.html" with ime="skodelica" razred="hero__art" %}
+  </section>
+
+  <ul class="stats" aria-label="Statistika">
+    <li class="stat">
+      <span class="stat__icon">{% include "rezervacije/_ikona.html" with ime="vrata" %}</span>
+      <span><span class="stat__value">{{ st_ucilnic }}</span><span class="stat__label">Učilnice na voljo</span></span>
+    </li>
+    <li class="stat">
+      <span class="stat__icon">{% include "rezervacije/_ikona.html" with ime="koledar" %}</span>
+      <span><span class="stat__value">{{ st_danes }}</span><span class="stat__label">Rezervacije danes</span></span>
+    </li>
+    <li class="stat">
+      <span class="stat__icon">{% include "rezervacije/_ikona.html" with ime="ura" %}</span>
+      <span><span class="stat__value">{{ st_prihodnjih }}</span><span class="stat__label">Prihajajoče rezervacije</span></span>
+    </li>
+  </ul>
+
+  <section class="section" aria-labelledby="kako-deluje">
+    <h2 id="kako-deluje">Kako deluje</h2>
+    <ol class="steps">
+      <li class="step">
+        {% include "rezervacije/_ikona.html" with ime="vrata" %}
+        <h3>Izberi učilnico</h3>
+        <p>Poglej seznam učilnic in njihove zasedene termine.</p>
+      </li>
+      <li class="step">
+        {% include "rezervacije/_ikona.html" with ime="koledar" %}
+        <h3>Izberi datum in šolsko uro</h3>
+        <p>Rezerviraš lahko katerikoli delovni dan, od predure do 10. ure.</p>
+      </li>
+      <li class="step">
+        {% include "rezervacije/_ikona.html" with ime="kljukica" %}
+        <h3>Potrdi rezervacijo</h3>
+        <p>Rezervacijo najdeš pod »Moje rezervacije«, kjer jo lahko urediš ali prekličeš.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="section" aria-labelledby="ucilnice-naslov">
+    <div class="page-header">
+      <div>
+        <h2 id="ucilnice-naslov">Učilnice</h2>
+        <p class="muted">Izberite učilnico in si oglejte njene prihajajoče termine.</p>
+      </div>
+    </div>
+
+    {% if ucilnice %}
+      <div class="chips" role="group" aria-label="Filtriraj učilnice" data-filtri hidden>
+        <button type="button" class="chip" data-filter="vse" aria-pressed="true">Vse</button>
+        <button type="button" class="chip" data-filter="racunalniska" aria-pressed="false">Računalniške</button>
+        <button type="button" class="chip" data-filter="splosna" aria-pressed="false">Splošne</button>
+      </div>
+
+      <ul class="grid">
+        {% for ucilnica in ucilnice %}
+          {% if "Računalnišk" in ucilnica.opis %}
+            {% with tip="racunalniska" ikona="racunalnik" %}{% include "rezervacije/_kartica_ucilnice.html" %}{% endwith %}
+          {% elif "Fitnes" in ucilnica.opis %}
+            {% with tip="drugo" ikona="utez" %}{% include "rezervacije/_kartica_ucilnice.html" %}{% endwith %}
+          {% else %}
+            {% with tip="splosna" ikona="knjiga" %}{% include "rezervacije/_kartica_ucilnice.html" %}{% endwith %}
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% else %}
+      {% if user.is_staff %}
+        {% url 'admin:rezervacije_ucilnica_add' as dodaj_url %}
+        {% include "rezervacije/_prazno.html" with naslov="Ni učilnic" besedilo="Trenutno ni na voljo nobene učilnice. Ko jih bo administrator dodal, se bodo prikazale tukaj." povezava=dodaj_url gumb="Dodaj učilnico" %}
+      {% else %}
+        {% include "rezervacije/_prazno.html" with naslov="Ni učilnic" besedilo="Trenutno ni na voljo nobene učilnice. Ko jih bo administrator dodal, se bodo prikazale tukaj." %}
+      {% endif %}
+    {% endif %}
+  </section>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    // Filtriranje kartic učilnic po tipu (data-tip).
+    (function () {
+      var skupina = document.querySelector("[data-filtri]");
+      if (!skupina) return;
+      var gumbi = skupina.querySelectorAll("[data-filter]");
+      var kartice = document.querySelectorAll("[data-tip]");
+      skupina.hidden = false;
+      gumbi.forEach(function (gumb) {
+        gumb.addEventListener("click", function () {
+          var filter = gumb.dataset.filter;
+          gumbi.forEach(function (g) { g.setAttribute("aria-pressed", String(g === gumb)); });
+          kartice.forEach(function (k) { k.hidden = filter !== "vse" && k.dataset.tip !== filter; });
+        });
+      });
+    })();
+  </script>
+{% endblock %}
