@@ -59,6 +59,10 @@ python manage.py test
 - Ustvarjanje nove rezervacije za šolsko uro (učilnica, datum, šolska ura 0–10, namen).
   Čas posamezne ure (npr. 1. ura 8.00–8.45) je določen v programu in se izpiše samodejno.
 - Pregled lastnih rezervacij ter njihovo urejanje in preklic (s potrditveno stranjo).
+- Koledar zasedenosti: tedenska mreža (pon–pet × šolske ure) na strani učilnice in na
+  strani `/koledar/` z izbiro učilnice. Prosti termini so povezava na predizpolnjen
+  obrazec, lastne rezervacije vodijo na urejanje, pretekli termini so posivljeni;
+  med tedni se premikaš z gumbi ali parametrom `?teden=LLLL-MM-DD`.
 - Preverjanje pravilnosti: datum ne sme biti v preteklosti ne na soboto ali nedeljo,
   učilnica je lahko v isti šolski uri istega dne rezervirana le enkrat
   (zagotovljeno tudi z omejitvijo v podatkovni bazi).
@@ -95,7 +99,7 @@ Preverjeno 11. 11. 2026 z Djangom 6.1.2 in Pythonom 3.14:
 - `python manage.py loaddata ucilnice` – „Installed 14 object(s) from 1 fixture(s)“;
   ponovni zagon učilnic ne podvoji.
 - `python manage.py check` – „System check identified no issues (0 silenced).“
-- `python manage.py test` – 12 testov, vsi uspešni (OK):
+- `python manage.py test` – 19 testov, vsi uspešni (OK):
   - rezervacija iste učilnice v isti šolski uri je zavrnjena (model in obrazec),
   - druga šolska ura iste učilnice je dovoljena, urejanje lastne rezervacije ni konflikt,
   - sobota in pretekli datum sta zavrnjena,
@@ -103,4 +107,7 @@ Preverjeno 11. 11. 2026 z Djangom 6.1.2 in Pythonom 3.14:
   - stran učilnice prikaže datum, šolsko uro, čas in namen,
   - anonimni uporabnik je pri `/rezervacije/nova/` preusmerjen na prijavo,
   - uporabnik ne more preklicati tuje rezervacije (404),
-  - prazen seznam učilnic prikaže sporočilo, fixture naloži 14 učilnic po oznaki.
+  - prazen seznam učilnic prikaže sporočilo, fixture naloži 14 učilnic po oznaki,
+  - koledar: zasedena ura ni klikljiva, prosta vodi na predizpolnjen obrazec (anonimne
+    prek prijave), lastna rezervacija je označena, neveljaven `?teden=` prikaže privzeti teden,
+  - obrazec nove rezervacije prevzame `ucilnica`, `datum` in `solska_ura` iz povezave.
