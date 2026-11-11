@@ -5,10 +5,17 @@ from django.urls import reverse
 from django.utils import timezone
 
 
+class UcilnicaManager(models.Manager):
+    def get_by_natural_key(self, oznaka):
+        return self.get(oznaka=oznaka)
+
+
 class Ucilnica(models.Model):
     oznaka = models.CharField("oznaka", max_length=20, unique=True)
     kapaciteta = models.PositiveIntegerField("kapaciteta")
     opis = models.TextField("opis", blank=True)
+
+    objects = UcilnicaManager()
 
     class Meta:
         ordering = ["oznaka"]
@@ -17,6 +24,9 @@ class Ucilnica(models.Model):
 
     def __str__(self):
         return self.oznaka
+
+    def natural_key(self):
+        return (self.oznaka,)
 
     def get_absolute_url(self):
         return reverse("rezervacije:ucilnica_detail", args=[self.pk])
