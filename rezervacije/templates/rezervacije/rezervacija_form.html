@@ -20,16 +20,7 @@
       {% for field in form %}
         <div class="field{% if field.errors %} field--error{% endif %}">
           <label for="{{ field.id_for_label }}">{{ field.label|capfirst }}</label>
-          {% if field.name == "ucilnica" and not object and not form.is_bound and request.GET.ucilnica %}
-            {# Predizbrana učilnica iz povezave na strani učilnice (?ucilnica=<id>). #}
-            <select name="{{ field.html_name }}" id="{{ field.auto_id }}" required>
-              {% for moznost in field %}
-                <option value="{{ moznost.data.value|stringformat:'s' }}"{% if moznost.data.value|stringformat:'s' == request.GET.ucilnica %} selected{% endif %}>{{ moznost.data.label }}</option>
-              {% endfor %}
-            </select>
-          {% else %}
-            {{ field }}
-          {% endif %}
+          {{ field }}
           {% if field.help_text %}<div class="field__help">{{ field.help_text }}</div>{% endif %}
           {{ field.errors }}
         </div>

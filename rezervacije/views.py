@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -47,6 +49,26 @@ class RezervacijaCreateView(LoginRequiredMixin, CreateView):
     model = Rezervacija
     form_class = RezervacijaForm
     success_url = reverse_lazy("rezervacije:moje")
+
+    def get_initial(self):
+        """Predizpolni obrazec iz ?ucilnica=&datum=&solska_ura= (neveljavne vrednosti prezre)."""
+        initial = super().get_initial()
+        get = self.request.GET
+        try:
+            initial["ucilnica"] = Ucilnica.objects.get(pk=int(get["ucilnica"]))
+        except (KeyError, ValueError, Ucilnica.DoesNotExist):
+            pass
+        try:
+            initial["datum"] = date.fromisoformat(get["datum"])
+        except (KeyError, ValueError):
+            pass
+        try:
+            ura = int(get["solska_ura"])
+            if ura in SOLSKE_URE:
+                initial["solska_ura"] = ura
+        except (KeyError, ValueError):
+            pass
+        return initial
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
