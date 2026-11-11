@@ -1,6 +1,12 @@
+# Virtualna okolja
+.venv/
+venv/
+
+# Python
 __pycache__/
 *.pyc
-venv/
-.venv/
-*.db
-*.sqlite
+
+# Podatkovna baza in skrivnosti
+db.sqlite3
+*.sqlite3
+.env
